@@ -1,0 +1,156 @@
+
+<Workgroup VS Domain>
+
+WORKGROUP
+
+- No server is required
+- User accounts are required on every machine
+- Workgroup is your home network
+- There`s no centralized Database to manage things
+- Windows 7, 8, 10
+
+DOMAIN
+- A server, called a domain controller, is require.
+- User accounts are stored in Active Directory
+- Windows server or Linux Server
+- You add services domain controller Active Directory
+- Active directory is installed on the server (user password resets, adding a user, adding groups, lockout accounts, every comes under Active Directory )
+
+Para ser um domain controller precisamos instalar o Active Directory
+
+Para um novo servidor instalamos o sistema operacional e para servidores usamos o windows server mas de momento apenas instalamos o sistema operacional 
+
+Como instalar o Active Directory Windows Server, aqui no 2022 SERVER mas é igual aos anteriores
+
+https://www.youtube.com/watch?v=CykUGWGeRFc
+
+Descobrir a versao do Windows Server vamos para o CMD e digitamos winver
+
+Ao instalar a maquina virtual no VMWare nós temos que desabilitar o Windows Defender Firewall as empresas usam outros sistemas para segurança
+
+<COMO SABER SE UMA MÁQUINA ESTÁ CONECTADA NO DOMÍNIO>
+    Comando CMD: whoami /fqdn
+
+    Como meu laptop não está em um dominio recebo a mensagem:
+
+    ERROR: Unable to get Fully Qualified Distinguished Name (FQDN) as the current
+       logged-on user is not a domain user.
+
+
+<COMO INSTALAR cliente ACTIVE DIRECTORY NA MAQUINA WINDOWS 10 PARA ACESSAR AD E AJUDAR USUARIOS COMPUTADOR PRECISA ESTAR NO DOMINIO E COM PERMISSAO DE ADMIN>
+    Vamos em Apps and Features / A direita Optional features / Add a feature / RSAT: Active Directory Domain Services and Lightweight Directory Services Tools
+
+
+<RESET PASSWORD>
+    Quando o usuario for colocar a nova senha tem que respeitar as configurações do Domain Policy, quais são os requisitos da empresa para senhas.
+    Isso encontramos em:
+        Group Policy Management / Acessamos o dominio / Default Domain Policy /Polices / Windows Setting / Security Settings / Account Policies/Password Policy
+        COMANDO CMD: net accounts 
+
+ 
+ <FERRAMENTA PARA FAZER O GERENCIAMENTO DO ACTIVE DIRECTORY DIRETO PELO BROWSER>
+    ManageEngine ADManager Plus
+    https://www.manageengine.com/es/ad-manager/
+
+
+<Active Directory Module for Windows PowerShell>
+    Criar usuarios pela linha de comando PowerShell. No meu laptop não tem por que não tenho AD Instalado
+    Exemplo de comando: New-ADUser -Name "Danidemo2"
+
+    So let’s create a new account with the following attributes:
+
+Name – Jack Robinson
+Given Name – Jack
+Surname – Robinson
+Account Name – J.Robinson
+User Principal Name – J.Robinson@enterprise.com
+Path address – “OU=Managers,DC=enterprise,DC=com”
+Password Input
+Status – Enabled
+
+COMANDO PowerShell:
+New-ADUser -Name "Jack Robinson" -GivenName "Jack" -Surname "Robinson" -SamAccountName "J.Robinson" -UserPrincipalName "J.Robinson@enterprise.com" -Path "OU=Managers,DC=enterprise,DC=com" -AccountPassword(Read-Host -AsSecureString "Input Password") -Enabled $true
+
+https://blog.netwrix.com/2018/06/07/how-to-create-new-active-directory-users-with-powershell/
+
+<Saber todos os comandos>
+    get-command -Module ActiveDirectory
+    get-command *ADUser*
+    get-command *ADGroup*
+    help new-aduser -Examples
+
+
+<PODEMOS CADASTRAR USUARIOS TBM OU GERENCIAR PELA FERRAMENTA ACTIVE DIRECTORY ADMINISTRATIVE CENTER NO WINDOWS SERVER>
+    Ao cadastrar um usuario automaticamente ele gera o script de coo podemos fazer no PowerShell
+
+<powershell ISE>
+    Para criar scripts de contas novas por exemplo para o Active diretory
+    Bom para aprender e também ajuda na criação por completar os comandos
+    E podemos criar scripts para outras finalidades
+
+    Aprendenndo mais comandos:
+    https://docs.microsoft.com/es-es/powershell/scripting/samples/working-with-files-and-folders?view=powershell-7.2
+
+
+<ACTIVE DIRETORY TOOLS FROM THIRD PARTY VENDORS OR SOMEONE CREATED TOOLS TO MAKE OUR JOB EASIER>
+    free Active directory free tools netwrix  (termo para procurar no google)
+    https://blog.netwrix.com/2021/03/10/active-directory-tools/
+
+    http://www.cjwdev.com/Software.html
+
+    En vez de a empresa dar acesso ao ActiveDiretory para reset de senha pode dar uma ferramenta destas
+
+    <AD Account Reset Tool>
+A simple tool that allows helpdesk technicians or non admin users to quickly unlock and reset passwords for user accounts without 
+having to use the full AD Users & Computers MMC tool (assuming they have been delegated the required permissions).
+
+    <AD Info>
+Query your Active Directory domain for information on several different types of objects (Users, Computers, Groups, Printers etc) using this 
+flexible and user friendly Active Directory reporting tool.
+
+    <Netwrix Account Lockout Examiner>
+Netwrix Account Lockout Examiner is well known as one of the best Active Directory tools for quickly resolving one of the most pressing 
+issues with AD: account lockouts. It enables you to identify the root cause of lockouts in a single keystroke, slashing troubleshooting time 
+by up to 90 percent. This lightweight and intuitive tool empowers you to investigate issues like why the same account repeatedly locks out without 
+having to slog through a mountain of cryptic event logs — just enter the username and click a button.
+
+
+    <LockoutStatus.exe>
+
+Account Lockout Status (LockoutStatus.exe) is a combination command-line and graphical tool that displays lockout information about a particular user account.
+https://www.microsoft.com/en-us/download/details.aspx?id=15201
+
+<USUARIO ADMIN>
+    Para ser um usuario Admin e dar suporte a outros usuarios geralmente essa conta tem que estar no grupo
+        Domain Admins 
+
+<GROUP POLICY>
+    Temos o Local Group Policy Editor
+
+    E temos o conectado ao dominio mais comum nas emnpresas
+    Podemos instalar na máquina local em:
+    Inicio / Apps and Features /  a direita Optional features / Add a feature / RSAT: Group Policy Management Tools 
+    Quando está no dominio o Local Group Police é atualizado com as politicas do servidor
+
+<FORÇAR A LEITURA DAS NOVAS POLITICAS>
+    Comando CMD:   gpupdate /force
+    
+<MESMO NÃO TENDO ACESSO AO SERVIDOR E AS POLITICAS PODEMOS GERAR UM RELATORIO>
+    Comando CMD:  gpresult  (mostra todas a possibilidades)
+                  gpresult /h c:\gprsults.html (Temos o relatorio de todas as politicas como acessando o servidor) It´s a really important and powerful thing over here.
+
+    PARA ALGO MAIS GRAFICO
+        rsop.msc
+
+<DEPLOYING A SOFTWARE THROUGH GROUP POLICY CAN BE DONE>
+    https://activedirectorypro.com/deploy-software-using-group-policy/
+
+
+
+
+
+
+
+
+
+
